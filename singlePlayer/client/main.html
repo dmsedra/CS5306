@@ -1,0 +1,21 @@
+<head>
+  <title>Single Clique</title>
+</head>
+
+<body>
+  <h1>Please select the best label for the following image</h1>
+  {{> loginButtons}}
+  {{> choices}}
+</body>
+
+
+
+<template name="choices">
+{{#if currentUser}}
+
+  <img src='/data/table.jpg' style='width:150px'>
+  <li class='material'> Wood </li>
+  <li class='material'> Stone </li>
+  <li class='material'> Glass </li>
+{{/if}}
+</template>

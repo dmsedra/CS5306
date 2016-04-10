@@ -1,0 +1,17 @@
+{
+  "turkserver": {
+    "adminPassword": "",
+    "experiment": {
+      "limit": {
+        "batch": <int>
+      }
+    },
+    "mturk": {
+      "sandbox": <true|false>,
+      "accessKeyId": "",
+      "secretAccessKey": "",
+      "externalUrl": "",
+      "frameHeight": <int>
+    }
+  }
+}
