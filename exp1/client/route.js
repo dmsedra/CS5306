@@ -1,5 +1,5 @@
 Router.route('/', function() {
-  this.render('home');
+  this.render('lobby');
 });
 
 Router.route('/experiment', function() {

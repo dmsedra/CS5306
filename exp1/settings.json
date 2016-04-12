@@ -8,8 +8,8 @@
     },
     "mturk": {
       "sandbox": true,
-      "accessKeyId": "",
-      "secretAccessKey": "",
+      "accessKeyId": "AKIAJH5EUEES7QMI735A",
+      "secretAccessKey": "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",
       "externalUrl": "",
       "frameHeight": "integer"
     }
