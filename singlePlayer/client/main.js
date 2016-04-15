@@ -1,5 +1,29 @@
 Meteor.subscribe('thePlayers');
+Meteor.subscribe('Queued');
 
+Template.choices.helpers({
+	'master': function(){
+		var email = Meteor.user().emails[0].address
+		//check if admin for special client powers
+		if(email != 'admin@.com'){
+			console.log('REGULAR!!');
+			var id = Meteor.userId();
+			Queued.insert({'user':id});
+		}
+	}
+});
+
+Queued.find().observeChanges({
+	added: function(){
+		var email = Meteor.user().emails[0].address
+		//check if admin for special client powers
+		console.log('inserted');
+		if(email == 'admin@.com'){
+			console.log('and updating');
+			Meteor.call('assignUser',Meteor.userId());
+		}
+	}
+});
 
 Template.choices.events({
 	'click .material': function(event){

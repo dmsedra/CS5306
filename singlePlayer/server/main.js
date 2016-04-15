@@ -4,11 +4,16 @@ Meteor.methods({
 		PlayerList.update({createdBy:currentUserId}, {$set: {material: selectedMaterial}}, {upsert:true});
 	},
 	//console.log(PlayerList.find({createdBy: currentUserId}).fetch());
-	'getGame': function(){
-
+	'assignUser': function(userId){
+		console.log('user being assigned!')
+		Queued.remove({'user':userId});
 	}
 });
 
 Meteor.publish('thePlayers', function(){
 	return PlayerList.find()
+});
+
+Meteor.publish('Queued', function(){
+	return Queued.find()
 });
