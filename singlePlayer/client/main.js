@@ -1,5 +1,6 @@
 Meteor.subscribe('thePlayers');
 
+
 Template.choices.events({
 	'click .material': function(event){
 		var selectedMaterial = $(event.target).text();
