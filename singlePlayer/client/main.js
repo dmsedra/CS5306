@@ -1,6 +1,15 @@
 Meteor.subscribe('thePlayers');
 Meteor.subscribe('Queued');
 
+
+Meteor.startup(function (){
+	Meteor.subscribe('games', function(){
+		Games.find().fetch();
+	});
+	console.log('hello client');
+	console.log(Games.find().fetch());
+});
+
 Template.choices.helpers({
 	'master': function(){
 		var email = Meteor.user().emails[0].address

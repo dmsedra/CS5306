@@ -1,3 +1,9 @@
+
+
+Meteor.startup(function(){
+	
+});
+
 Meteor.methods({
 	'insertPlayerData': function(selectedMaterial){
 		var currentUserId = Meteor.userId();
@@ -16,4 +22,9 @@ Meteor.publish('thePlayers', function(){
 
 Meteor.publish('Queued', function(){
 	return Queued.find()
+});
+
+Meteor.publish('games', function(){
+	console.log(Games.find().fetch());
+	return Games.find({})
 });
