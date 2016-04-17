@@ -4,17 +4,17 @@
 
 <body>
   <h1>Please select the best label for the following image</h1>
-  {{> loginButtons}}
-  {{> choices}}
+  {{> loginButtons }}
+  {{> choices }}
 </body>
 
 
 
 <template name="choices">
 {{#if currentUser}}
+ {{master}}
 	{{#if gameRunning}}
-  {{master}}
-  <img src='/data/table.jpg' style='width:150px'>
+   <img src='/data/table.jpg' style='width:150px'>
   <ul>
   <li class='material {{selectedClass "material1"}}'> {{ material1 }} </li>
   <li class='material {{selectedClass "material2"}}'> {{ material2 }} </li>
