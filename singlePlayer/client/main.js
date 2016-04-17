@@ -13,7 +13,6 @@ Template.choices.helpers({
 		if(email != 'admin@.com'){
 			console.log('REGULAR!!');
 			var id = Meteor.userId();//should be assignmentID from Turkserver
-			console.log(id);
 			Queued.insert({'user':id});
 		}
 	},
@@ -32,8 +31,10 @@ Template.choices.helpers({
 				.thirdPlayerSelection;
 		}
 		g = Games.findOne({});
-		if (selectedMaterial == g[material]){
-			return 'selected';
+		if ($.trim(selectedMaterial) == $.trim(g[material])){
+			return "selected";
+		} else {
+			return "notSelected";
 		}
 	},
 	'playerSelection':function(player) {
@@ -44,20 +45,20 @@ Template.choices.helpers({
 		}
 	},
 	'imageLocation': function(){
-		// return Games.find().imageLocation;
-		return '/data/table.jpg';
+		return Games.findOne().imageLocation;
+		// return '/data/table.jpg';
 	},
 	'material1': function(){
-		// return Games.find().material1;
-		return 'material1';
+		return Games.findOne().material1;
+		// return 'material1';
 	},
 	'material2': function(){
-		// return Games.find().material2;
-		return 'material2';
+		return Games.findOne().material2;
+		// return 'material2';
 	},
 	'material3': function(){
-		// return Games.find().material3;
-		return 'material3';
+		return Games.findOne().material3;
+		// return 'material3';
 	},
 	'gameRunning': function(){
 		// console.log(Games.find({}));
