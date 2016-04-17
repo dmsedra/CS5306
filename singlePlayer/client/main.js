@@ -1,10 +1,21 @@
 Meteor.subscribe('thePlayers');
-
+countdown = new ReactiveCountdown(30,{
+				completed:function(){
+					//done with this game
+					console.log("GAME OVER");
+					Meteor.call('endGame', Games.findOne({})._id);
+				},});
 
 Meteor.startup(function (){
-	Meteor.subscribe('games');
+	Meteor.subscribe('games',{
+		onReady:function(){
+			var t = Games.findOne({}).timeRemaining;
+			countdown.start();
+		}
+	});
 	Meteor.subscribe('Queued');
 });
+
 
 Template.choices.helpers({
 	'master': function(){
@@ -52,7 +63,6 @@ Template.choices.helpers({
 		var g = Games.findOne();
 		var m = g[mat];
 		var c = 0;
-		console.log(":"+g.secondPlayerSelection+":");
 		if (g.firstPlayerSelection == m) {
 			c = c + 1;
 		}
@@ -65,17 +75,7 @@ Template.choices.helpers({
 		return m.concat("  + ".concat(c)) ;
 		// return 'material1';
 	},
-	'material2': function(){
-		return Games.findOne().material2;
-		// return 'material2';
-	},
-	'material3': function(){
-		return Games.findOne().material3;
-		// return 'material3';
-	},
 	'gameRunning': function(){
-		// console.log(Games.find({}));
-		// return false;
 		if (Games.findOne({})){
 			return true;
 		} else {
@@ -84,8 +84,12 @@ Template.choices.helpers({
 	},
 	'game':function(){
 		return Games.find().fetch();
+	},
+	'timeRemaining':function(){
+		return countdown.get();
 	}
 });
+
 
 Queued.find().observeChanges({
 	added: function(){
@@ -105,7 +109,6 @@ Queued.find().observeChanges({
 
 Template.choices.events({
 	'click .material': function(event){
-		console.log($(event.target).text().concat(" - selected by - ".concat(Meteor.userId())))
 		var selectedMaterial = $(event.target).text();
 		if (selectedMaterial.indexOf("+") != -1){
 			selectedMaterial = selectedMaterial.substring(0,selectedMaterial.indexOf("+"))

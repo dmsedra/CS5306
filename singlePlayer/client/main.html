@@ -14,18 +14,18 @@
 {{#if currentUser}}
  {{master}}
 	{{#if gameRunning}}
+	<p>There are {{timeRemaining}} seconds left in this game.</p>
    <img src='/data/table.jpg' style='width:150px'>
   <ul>
   <li class='material {{selectedClass "material1"}}'> {{ materialNameAndNum "material1" }} </li>
   <li class='material {{selectedClass "material2"}}'> {{ materialNameAndNum "material2"  }} </li>
   <li class='material {{selectedClass "material3"}}'> {{ materialNameAndNum "material3"  }} </li>
   </ul>
-  <ul>
+  <!-- <ul>
   <li> {{playerSelection "firstPlayer"}} </li>
   <li> {{playerSelection "secondPlayer"}} </li>
   <li> {{playerSelection "thirdPlayer"}} </li>
-  </ul>
-  {{game}}
+  </ul> -->
   {{/if}}
 {{/if}}
 </template>
