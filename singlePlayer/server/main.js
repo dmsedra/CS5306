@@ -7,17 +7,19 @@ Meteor.startup(function(){
 			numPlayers: 0, imageLocation:"/data/table.jpg",
 			material1:"wood",material2:"glass",material3:"plastic",groundTruth:"wood"});
 	}
-	
 });
 
 Meteor.methods({
 	'insertPlayerData': function(selectedMaterial){
 		var currentUserId = Meteor.userId();
 		PlayerList.update({createdBy:currentUserId}, {$set: {material: selectedMaterial}}, {upsert:true});
+		Games.update({firstPlayer:currentUserId},{$set:{firstPlayerSelection:selectedMaterial}});
+		Games.update({secondPlayer:currentUserId},{$set:{secondPlayerSelection:selectedMaterial}});
+		Games.update({thirdPlayer:currentUserId},{$set:{thirdPlayerSelection:selectedMaterial}});
 	},
 	//console.log(PlayerList.find({createdBy: currentUserId}).fetch());
 	'assignUser': function(userId){
-		console.log('user being assigned!')
+		console.log('user being assigned!'.concat(userId));
 		Queued.remove({'user':userId});
 
 		if (Games.findOne({numPlayers: 2})){
@@ -26,7 +28,8 @@ Meteor.methods({
 			Games.update({numPlayers:1},{$set:{numPlayers:2,secondPlayer:userId}});
 		} else {
 			guid = Games.findOne({numPlayers:0})._id;
-			Games.update({_uid:guid},{$set:{numPlayers:1,firstPlayer:userId}});
+			console.log("adding users to game".concat(guid))
+			Games.update({_id:guid},{$set:{numPlayers:1,firstPlayer:userId}});
 		}
 	}
 });

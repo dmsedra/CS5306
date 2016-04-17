@@ -1,9 +1,9 @@
 Meteor.subscribe('thePlayers');
-Meteor.subscribe('Queued');
 
 
 Meteor.startup(function (){
 	Meteor.subscribe('games');
+	Meteor.subscribe('Queued');
 });
 
 Template.choices.helpers({
@@ -12,7 +12,8 @@ Template.choices.helpers({
 		//check if admin for special client powers
 		if(email != 'admin@.com'){
 			console.log('REGULAR!!');
-			var id = Meteor.user();//should be assignmentID from Turkserver
+			var id = Meteor.userId();//should be assignmentID from Turkserver
+			console.log(id);
 			Queued.insert({'user':id});
 		}
 	},
@@ -36,6 +37,7 @@ Template.choices.helpers({
 		}
 	},
 	'playerSelection':function(player) {
+		console.log(player);
 		g = Games.findOne({});
 		if (g){
 			return g[player].concat(g[player.concat("Selection")]);
@@ -60,6 +62,14 @@ Template.choices.helpers({
 	'gameRunning': function(){
 		// console.log(Games.find({}));
 		// return false;
+		if (Games.findOne({})){
+			return true;
+		} else {
+			return false;
+		}
+	},
+	'game':function(){
+		return Games.find().fetch();
 	}
 });
 
@@ -73,7 +83,7 @@ Queued.find().observeChanges({
 			//this is for handling the case that observeChanges
 			//is called only once for multiple added users.
 			Queued.find().forEach( function(queuedUser){
-				Meteor.call('assignUser',queuedUser.userId);
+				Meteor.call('assignUser',queuedUser.user);
 			});	
 		}
 	}
@@ -81,6 +91,7 @@ Queued.find().observeChanges({
 
 Template.choices.events({
 	'click .material': function(event){
+		console.log($(event.target).text().concat(" - selected by - ".concat(Meteor.userId())))
 		var selectedMaterial = $(event.target).text();
 		Meteor.call('insertPlayerData',selectedMaterial);
 		console.log(PlayerList.find({material:selectedMaterial}).count());
