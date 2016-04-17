@@ -39,7 +39,7 @@ Template.choices.helpers({
 	},
 	'playerSelection':function(player) {
 		console.log(player);
-		g = Games.findOne({});
+		var g = Games.findOne({});
 		if (g){
 			return g[player].concat(g[player.concat("Selection")]);
 		}
@@ -48,8 +48,21 @@ Template.choices.helpers({
 		return Games.findOne().imageLocation;
 		// return '/data/table.jpg';
 	},
-	'material1': function(){
-		return Games.findOne().material1;
+	'materialNameAndNum': function(mat){
+		var g = Games.findOne();
+		var m = g[mat];
+		var c = 0;
+		console.log(":"+g.secondPlayerSelection+":");
+		if (g.firstPlayerSelection == m) {
+			c = c + 1;
+		}
+		if (g.secondPlayerSelection == m) {
+			c = c + 1;
+		}
+		if (g.thirdPlayerSelection == m) {
+			c = c + 1;
+		}
+		return m.concat("  + ".concat(c)) ;
 		// return 'material1';
 	},
 	'material2': function(){
@@ -94,7 +107,10 @@ Template.choices.events({
 	'click .material': function(event){
 		console.log($(event.target).text().concat(" - selected by - ".concat(Meteor.userId())))
 		var selectedMaterial = $(event.target).text();
-		Meteor.call('insertPlayerData',selectedMaterial);
+		if (selectedMaterial.indexOf("+") != -1){
+			selectedMaterial = selectedMaterial.substring(0,selectedMaterial.indexOf("+"))
+		}
+		Meteor.call('insertPlayerData',selectedMaterial.trim());
 		console.log(PlayerList.find({material:selectedMaterial}).count());
 		console.log(PlayerList.find().count());
 		if(PlayerList.find({material:selectedMaterial}).count() == PlayerList.find().count()){
