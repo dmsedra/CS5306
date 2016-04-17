@@ -12,10 +12,19 @@
 
 <template name="choices">
 {{#if currentUser}}
+	{{#if gameRunning}}
   {{master}}
   <img src='/data/table.jpg' style='width:150px'>
-  <li class='material'> Wood </li>
-  <li class='material'> Stone </li>
-  <li class='material'> Glass </li>
+  <ul>
+  <li class='material {{selectedClass "material1"}}'> {{ material1 }} </li>
+  <li class='material {{selectedClass "material2"}}'> {{ material2 }} </li>
+  <li class='material {{selectedClass "material3"}}'> {{ material3 }} </li>
+  </ul>
+  <ul>
+  <li> {{playerSelection "firstPlayer"}} </li>
+  <li> {{playerSelection "secondPlayer"}} </li>
+  <li> {{playerSelection "thirsPlayer"}} </li>
+  </ul>
+  {{/if}}
 {{/if}}
 </template>

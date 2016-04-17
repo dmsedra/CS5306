@@ -1,6 +1,12 @@
 
 
 Meteor.startup(function(){
+	if (! Games.findOne({})){
+		Games.insert({firstPlayer:"",secondPlayer:"",thirdPlayer:"",
+			firstPlayerSelection:"",secondPlayerSelection:"",thirdPlayerSelection:"",
+			numPlayers: 0, imageLocation:"/data/table.jpg",
+			material1:"wood",material2:"glass",material3:"plastic",groundTruth:"wood"});
+	}
 	
 });
 
@@ -13,6 +19,15 @@ Meteor.methods({
 	'assignUser': function(userId){
 		console.log('user being assigned!')
 		Queued.remove({'user':userId});
+
+		if (Games.findOne({numPlayers: 2})){
+			Games.update({numPlayers:2},{$set:{numPlayers:3,thirdPlayer:userId}});
+		} else if (Games.findOne({numPlayers:1})){
+			Games.update({numPlayers:1},{$set:{numPlayers:2,secondPlayer:userId}});
+		} else {
+			guid = Games.findOne({numPlayers:0})._id;
+			Games.update({_uid:guid},{$set:{numPlayers:1,firstPlayer:userId}});
+		}
 	}
 });
 
@@ -25,6 +40,14 @@ Meteor.publish('Queued', function(){
 });
 
 Meteor.publish('games', function(){
-	console.log(Games.find().fetch());
-	return Games.find({})
+	var currentUserId = this.userId;
+	// console.log(currentUserId);
+	if (Games.findOne({firstPlayer:currentUserId})){
+		return Games.find({firstPlayer:currentUserId});
+	}else if (Games.findOne({secondPlayer:currentUserId})){
+		return Games.find({secondPlayer:currentUserId});
+	}else {
+		return Games.find({thirdPlayer:currentUserId});
+	}
+	// return Games.find();
 });

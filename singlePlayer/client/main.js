@@ -3,11 +3,7 @@ Meteor.subscribe('Queued');
 
 
 Meteor.startup(function (){
-	Meteor.subscribe('games', function(){
-		Games.find().fetch();
-	});
-	console.log('hello client');
-	console.log(Games.find().fetch());
+	Meteor.subscribe('games');
 });
 
 Template.choices.helpers({
@@ -16,9 +12,54 @@ Template.choices.helpers({
 		//check if admin for special client powers
 		if(email != 'admin@.com'){
 			console.log('REGULAR!!');
-			var id = Meteor.userId();
+			var id = Meteor.user();//should be assignmentID from Turkserver
 			Queued.insert({'user':id});
 		}
+	},
+	'selectedClass': function(material){
+		if (Games.findOne({firstPlayer:Meteor.userId()})){
+			var selectedMaterial = 
+				Games.findOne({firstPlayer:Meteor.userId()})
+				.firstPlayerSelection;
+		}else if (Games.findOne({secondPlayer:Meteor.userId()})){
+			var selectedMaterial = 
+				Games.findOne({secondPlayer:Meteor.userId()})
+				.secondPlayerSelection;
+		}else if (Games.findOne({thirdPlayer:Meteor.userId()})){
+			var selectedMaterial = 
+				Games.findOne({thirdPlayer:Meteor.userId()})
+				.thirdPlayerSelection;
+		}
+		g = Games.findOne({});
+		if (selectedMaterial == g[material]){
+			return 'selected';
+		}
+	},
+	'playerSelection':function(player) {
+		g = Games.findOne({});
+		if (g){
+			return g[player].concat(g[player.concat("Selection")]);
+		}
+	},
+	'imageLocation': function(){
+		// return Games.find().imageLocation;
+		return '/data/table.jpg';
+	},
+	'material1': function(){
+		// return Games.find().material1;
+		return 'material1';
+	},
+	'material2': function(){
+		// return Games.find().material2;
+		return 'material2';
+	},
+	'material3': function(){
+		// return Games.find().material3;
+		return 'material3';
+	},
+	'gameRunning': function(){
+		// console.log(Games.find({}));
+		// return false;
 	}
 });
 
@@ -29,7 +70,11 @@ Queued.find().observeChanges({
 		console.log('inserted');
 		if(email == 'admin@.com'){
 			console.log('and updating');
-			Meteor.call('assignUser',Meteor.userId());
+			//this is for handling the case that observeChanges
+			//is called only once for multiple added users.
+			Queued.find().forEach( function(queuedUser){
+				Meteor.call('assignUser',queuedUser.userId);
+			});	
 		}
 	}
 });
