@@ -2,3 +2,8 @@
 .selected{
 	background-color: yellow;
 }
+
+div.game{
+	width:50%;
+	float: left;
+}

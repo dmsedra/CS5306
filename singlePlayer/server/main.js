@@ -1,5 +1,3 @@
-
-
 Meteor.startup(function(){
 	if (! Games.findOne({})){
 		Games.insert({firstPlayer:"",secondPlayer:"",thirdPlayer:"",
@@ -16,8 +14,8 @@ Meteor.methods({
 		Games.update({firstPlayer:currentUserId},{$set:{firstPlayerSelection:selectedMaterial}});
 		Games.update({secondPlayer:currentUserId},{$set:{secondPlayerSelection:selectedMaterial}});
 		Games.update({thirdPlayer:currentUserId},{$set:{thirdPlayerSelection:selectedMaterial}});
+
 	},
-	//console.log(PlayerList.find({createdBy: currentUserId}).fetch());
 	'assignUser': function(userId){
 		console.log('user being assigned!'.concat(userId));
 		Queued.remove({'user':userId});
@@ -35,12 +33,9 @@ Meteor.methods({
 		}
 	},
 	'endGame': function(gameId){
+		Games.update({_id:gameId},{$set:{timeRemaining:0}});
 		console.log("teminate game _id : ".concat(gameId))
 	}
-});
-
-Meteor.publish('thePlayers', function(){
-	return PlayerList.find()
 });
 
 Meteor.publish('Queued', function(){
@@ -48,14 +43,14 @@ Meteor.publish('Queued', function(){
 });
 
 Meteor.publish('games', function(){
-	var currentUserId = this.userId;
-	// console.log(currentUserId);
-	if (Games.findOne({firstPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}})){
-		return Games.find({firstPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}});
-	}else if (Games.findOne({secondPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}})){
-		return Games.find({secondPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}});
-	}else {
-		return Games.find({thirdPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}});
-	}
-	// return Games.find();
+	this.autorun(function(){
+		var currentUserId = this.userId;
+		if (Games.findOne({firstPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}})){
+			return Games.find({firstPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}});
+		}else if (Games.findOne({secondPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}})){
+			return Games.find({secondPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}});
+		}else {
+			return Games.find({thirdPlayer:currentUserId,timeRemaining:{$not:{$eq:0}}});
+		}
+	});
 });

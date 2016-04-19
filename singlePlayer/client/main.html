@@ -5,7 +5,12 @@
 <body>
   <h1>Please select the best label for the following image</h1>
   {{> loginButtons }}
+  <div class="wrapper">
   {{> choices }}
+<!--   {{> choices }}
+  {{> choices }}
+  {{> choices }} -->
+  </div>
 </body>
 
 
@@ -14,13 +19,15 @@
 {{#if currentUser}}
  {{master}}
 	{{#if gameRunning}}
+	<div class='game'>{{startTimer}}
 	<p>There are {{timeRemaining}} seconds left in this game.</p>
    <img src='/data/table.jpg' style='width:150px'>
   <ul>
   <li class='material {{selectedClass "material1"}}'> {{ materialNameAndNum "material1" }} </li>
   <li class='material {{selectedClass "material2"}}'> {{ materialNameAndNum "material2"  }} </li>
   <li class='material {{selectedClass "material3"}}'> {{ materialNameAndNum "material3"  }} </li>
-  </ul>
+  </ul></div>
+
   <!-- <ul>
   <li> {{playerSelection "firstPlayer"}} </li>
   <li> {{playerSelection "secondPlayer"}} </li>

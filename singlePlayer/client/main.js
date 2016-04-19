@@ -1,21 +1,19 @@
 Meteor.subscribe('thePlayers');
-countdown = new ReactiveCountdown(30,{
+Meteor.startup(function (){
+	Meteor.subscribe('games',{
+		// onReady:function(){
+		// 	console.log('countdown started');
+		// }
+	});
+	Meteor.subscribe('Queued');
+	countdown = new ReactiveCountdown(30,{
 				completed:function(){
 					//done with this game
 					console.log("GAME OVER");
 					Meteor.call('endGame', Games.findOne({})._id);
 				},});
-
-Meteor.startup(function (){
-	Meteor.subscribe('games',{
-		onReady:function(){
-			var t = Games.findOne({}).timeRemaining;
-			countdown.start();
-		}
-	});
-	Meteor.subscribe('Queued');
+	countdown._id=true;
 });
-
 
 Template.choices.helpers({
 	'master': function(){
@@ -76,7 +74,7 @@ Template.choices.helpers({
 		// return 'material1';
 	},
 	'gameRunning': function(){
-		if (Games.findOne({})){
+		if (Games.findOne({thirdPlayer:{$ne:""}})){
 			return true;
 		} else {
 			return false;
@@ -87,7 +85,14 @@ Template.choices.helpers({
 	},
 	'timeRemaining':function(){
 		return countdown.get();
-	}
+	},
+	'startTimer':function(){
+		if (countdown._id) {
+			countdown._id = false;
+			countdown.start();
+		}
+		return "";
+	},
 });
 
 
